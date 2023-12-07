@@ -6,22 +6,31 @@ import {
 	ProviderAttribute,
 	UserPool,
 	UserPoolClient,
-	UserPoolClientIdentityProvider,
 	UserPoolIdentityProviderGoogle,
 } from "aws-cdk-lib/aws-cognito";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 import { Stage } from "../utils";
+import {NodejsFunction} from "aws-cdk-lib/aws-lambda-nodejs";
+import {Runtime} from "aws-cdk-lib/aws-lambda";
+import * as path from "path";
 
 interface IProps extends cdk.StackProps {
 	readonly stage: Stage;
+	readonly table: Table;
 }
 
 export class NishikiBackendStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
 
-		const { stage } = props;
+		const { stage, table } = props;
+
+		const mainFunction = nishikiMainFunction(scope, stage, {
+			tableName: table.tableName,
+			region: this.region
+		});
 
 		const userPool = new UserPool(this, "NishikiUserPool", {
 			selfSignUpEnabled: false,
@@ -163,4 +172,30 @@ export class NishikiBackendStack extends cdk.Stack {
 			type: apigateway.ResponseType.EXPIRED_TOKEN,
 		});
 	}
+}
+
+interface IMainFunctionEnvironmentValue {
+	tableName: string, // DynamoDB's table name
+	region: string, // region
+}
+
+/**
+ * Define the Nishiki's main function
+ * @param scope
+ * @param stage
+ * @param environments
+ */
+const nishikiMainFunction = (scope: Construct, stage: Stage, environments: IMainFunctionEnvironmentValue) => {
+
+	const { tableName, region } = environments;
+
+	return new NodejsFunction(scope, "MainFunction", {
+		entry: path.join(__dirname, "../../backend/main"),
+		handler: "src/handler.ts",
+		runtime: Runtime.NODEJS_18_X,
+		environment: {
+			TABLE_NAME: tableName,
+			REGION: region,
+		},
+	})
 }
