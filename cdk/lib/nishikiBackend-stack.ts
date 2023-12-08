@@ -12,8 +12,8 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 import { Stage } from "../utils";
-import {NodejsFunction} from "aws-cdk-lib/aws-lambda-nodejs";
-import {Runtime} from "aws-cdk-lib/aws-lambda";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { Runtime } from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 
 interface IProps extends cdk.StackProps {
@@ -29,7 +29,7 @@ export class NishikiBackendStack extends cdk.Stack {
 
 		const mainFunction = nishikiMainFunction(scope, stage, {
 			tableName: table.tableName,
-			region: this.region
+			region: this.region,
 		});
 
 		const userPool = new UserPool(this, "NishikiUserPool", {
@@ -175,8 +175,8 @@ export class NishikiBackendStack extends cdk.Stack {
 }
 
 interface IMainFunctionEnvironmentValue {
-	tableName: string, // DynamoDB's table name
-	region: string, // region
+	tableName: string; // DynamoDB's table name
+	region: string; // region
 }
 
 /**
@@ -185,8 +185,11 @@ interface IMainFunctionEnvironmentValue {
  * @param stage
  * @param environments
  */
-const nishikiMainFunction = (scope: Construct, stage: Stage, environments: IMainFunctionEnvironmentValue) => {
-
+const nishikiMainFunction = (
+	scope: Construct,
+	stage: Stage,
+	environments: IMainFunctionEnvironmentValue,
+) => {
 	const { tableName, region } = environments;
 
 	return new NodejsFunction(scope, "MainFunction", {
@@ -197,5 +200,5 @@ const nishikiMainFunction = (scope: Construct, stage: Stage, environments: IMain
 			TABLE_NAME: tableName,
 			REGION: region,
 		},
-	})
-}
+	});
+};

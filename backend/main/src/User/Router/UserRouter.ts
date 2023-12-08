@@ -7,7 +7,14 @@ import {
 	honoResponseAdapter,
 } from "src/Shared/Adapters/HonoAdapter";
 
+/**
+ * This is a User router.
+ * @param app
+ */
 export const userRouter = (app: Hono) => {
+	app.post("/users", (c) => {
+		return honoNotImplementedAdapter(c);
+	});
 	app.get("/users/:id", (c) => {
 		return honoNotImplementedAdapter(c);
 	});
@@ -26,6 +33,16 @@ export const userRouter = (app: Hono) => {
 		return honoResponseAdapter(c, result);
 	});
 	app.delete("/users/:id", (c) => {
+		return honoNotImplementedAdapter(c);
+	});
+};
+
+/**
+ * This is an Auth router.
+ * @param app
+ */
+export const authRouter = (app: Hono) => {
+	app.get("/auth/me", (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 };
