@@ -3,7 +3,7 @@ import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUse
 import { IUserDto } from "src/User/Dtos/UserDto";
 
 interface ICreateUserInput {
-	name: string;
+	name?: string;
 	emailAddress: string;
 }
 
@@ -26,6 +26,6 @@ export class CreateUserController extends Controller<
 			return this.badRequest(result.error.message);
 		}
 
-		return this.ok(result.value);
+		return this.created(result.value);
 	}
 }

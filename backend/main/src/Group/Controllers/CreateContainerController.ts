@@ -31,6 +31,6 @@ export class CreateContainerController extends Controller<
 			return this.badRequest(result.error.message);
 		}
 
-		return this.ok(result.value);
+		return this.created(result.value);
 	}
 }

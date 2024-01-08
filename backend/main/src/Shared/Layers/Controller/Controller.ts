@@ -14,12 +14,12 @@ export abstract class Controller<
 	 * @param input
 	 * @protected
 	 */
-	protected abstract handler(input?: T): Promise<ControllerResultType<U>>;
+	protected abstract handler(input: T): Promise<ControllerResultType<U>>;
 
 	/**
 	 * you call this function form outside.
 	 */
-	public async execute(input?: T): Promise<ControllerResultType<U>> {
+	public async execute(input: T): Promise<ControllerResultType<U>> {
 		try {
 			return await this.handler(input);
 		} catch (err) {
@@ -47,7 +47,7 @@ export abstract class Controller<
 	 * You can set an object in the argument. IF so, the object is serialized.
 	 * @param body
 	 */
-	ok(body?: U): HttpType.OkStatus<U> {
+	ok(body: U): HttpType.OkStatus<U> {
 		return {
 			status: "OK",
 			statusCode: 200,
@@ -64,7 +64,7 @@ export abstract class Controller<
 	 * You can set an object in the argument. IF so, the object is serialized.
 	 * @param body
 	 */
-	created(body?: U): HttpType.CreatedStatus<U> {
+	created(body: U): HttpType.CreatedStatus<U> {
 		return {
 			status: "CREATED",
 			statusCode: 201,
